@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Acordar Servidor Render
         run: |
-          curl -I https://rota-estudantil-backend.onrender.com/
+          curl -I https://rota-estudantil-backend.onrender.com/health
