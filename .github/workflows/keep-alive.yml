@@ -1,14 +1,31 @@
-name: Render Keep-Alive
+name: Render Keep-Alive Contínuo
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: render-keepalive
+  cancel-in-progress: false 
+
 jobs:
-  ping:
+  vigilia:
     runs-on: ubuntu-latest
+    timeout-minutes: 355  
+
     steps:
-      - name: Acordar Servidor Render
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Executar Vigia do Render (Loop de 6 horas)
+        env:
+          SLEEP_SECONDS: "300"           
+          MAX_RUNTIME_SECONDS: "21000"   
         run: |
-          curl -I https://rota-estudantil-backend.onrender.com/health
+          python keep_alive.py
